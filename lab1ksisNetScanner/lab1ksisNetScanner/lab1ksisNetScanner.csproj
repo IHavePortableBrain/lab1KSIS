@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{00255EB2-88D0-424F-8EE5-C5C3E947F147}</ProjectGuid>
+    <ProjectGuid>{C9E900E2-D298-4DCE-9D73-0242396A86E7}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>lab1KSIS</RootNamespace>
-    <AssemblyName>lab1KSIS</AssemblyName>
+    <RootNamespace>lab1ksisNetScanner</RootNamespace>
+    <AssemblyName>lab1ksisNetScanner</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

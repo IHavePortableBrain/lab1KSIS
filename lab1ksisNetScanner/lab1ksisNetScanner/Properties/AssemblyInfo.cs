@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // Общие сведения об этой сборке предоставляются следующим набором
 // набора атрибутов. Измените значения этих атрибутов, чтобы изменить сведения,
 // связанные со сборкой.
-[assembly: AssemblyTitle("lab1KSIS")]
+[assembly: AssemblyTitle("lab1ksisNetScanner")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("lab1KSIS")]
+[assembly: AssemblyProduct("lab1ksisNetScanner")]
 [assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // Следующий GUID служит для идентификации библиотеки типов, если этот проект будет видимым для COM
-[assembly: Guid("00255eb2-88d0-424f-8ee5-c5c3e947f147")]
+[assembly: Guid("c9e900e2-d298-4dce-9d73-0242396a86e7")]
 
 // Сведения о версии сборки состоят из следующих четырех значений:
 //
