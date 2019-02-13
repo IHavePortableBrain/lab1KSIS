@@ -15,24 +15,54 @@ namespace lab1ksisNetScanner
             string hostname = Dns.GetHostName();
             IPHostEntry host = Dns.GetHostEntry(hostname);
             NetworkInterface[] niList = NetworkInterface.GetAllNetworkInterfaces();
-            int niIndex = 0;
+            
             Console.WriteLine($"{hostname}: ");
 
-
-            int hi = host.AddressList.Count() - 1;
-            for (int i = 0; i <= hi / 2; i++)
+            foreach (NetworkInterface ni in niList)
             {
-                Console.Write($"    Ipv4 {host.AddressList[i + hi / 2 + 1]} " +
-                    $"Ipv6 {host.AddressList[i]} ");
-
-                while(niIndex <= hi) {
-                    if (niList[niIndex++].OperationalStatus == OperationalStatus.Up)
-                    {
-                        Console.WriteLine($"Name {niList[niIndex].Name} Mac {niList[niIndex].GetPhysicalAddress()}");
-                        break;
-                    }
+                if (ni.OperationalStatus == OperationalStatus.Up)
+                {
+                    Console.WriteLine($"     Name {ni.Name} |" +
+                                      $"     Mac {ni.GetPhysicalAddress()}");
                 }
-           
+            }
+
+
+            Ping ping = new Ping();
+            PingReply reply;
+            IPAddress ip;
+            for (int i = host.AddressList.Count()/2;i< host.AddressList.Count();i++)
+            {
+                string subnet = host.AddressList[i].ToString();
+                subnet = subnet.Remove(subnet.LastIndexOf('.') + 1);
+                string strIp;
+
+                //skipping broadcast and reserved 0 255
+                for (byte j = 1; j < 255; j++)
+                {
+                    strIp = (subnet + j.ToString());
+                    ip = IPAddress.Parse(strIp);
+
+                    
+                    PingOptions o = new PingOptions();
+                    o.Ttl = 30;
+                    byte[] buf = new byte[32];
+                    reply = ping.Send(ip, 1, buf, o);
+                    //reply = ping.SendPingAsync(ip, 30);
+                    //ping
+                    
+                    if (reply.Status == IPStatus.Success)
+                    {
+                        try
+                        {
+                            host = Dns.GetHostEntry(ip);
+
+                            Console.WriteLine($"Name {host.HostName}  Adr {ip} Mac {(char)65}");
+                        }
+                        catch { Console.WriteLine("Couldnt retrieve hostname for " + strIp); }
+                    }
+                    //adrBytes[3] = j;
+                }
             }
 
             Console.ReadKey();
