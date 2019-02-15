@@ -31,10 +31,9 @@ namespace lab1ksisNetScanner
 
 
             Ping ping = new Ping();
-            PingReply reply;
-            IPAddress ip;
             //scanning each subnet
-            for (int i = host.AddressList.Count() / 2; i < host.AddressList.Count(); i++)
+            int hostcount = host.AddressList.Count();
+            for (int i = hostcount / 2; i < hostcount; i++)
             {
                 string subnet = host.AddressList[i].ToString();
                 subnet = subnet.Remove(subnet.LastIndexOf('.') + 1);
@@ -47,7 +46,6 @@ namespace lab1ksisNetScanner
         static CountdownEvent countdown;
         static int upCount;
         static object lockObj = new object();
-        const bool resolveNames = true;
 
         static void PingNet(string ipBase)
         {
@@ -57,23 +55,21 @@ namespace lab1ksisNetScanner
 
             //start measuaring elapsed time for that subnet
             sw.Start();
+
             Console.WriteLine("Scanning " + ipBase + " : ");
-            //string ipBase = "10.22.4.";
             for (int i = 1; i < 255; i++)
             {
-                string ip = ipBase + i.ToString();
-
+                string ipStr = ipBase + i.ToString();
                 Ping p = new Ping();
                 p.PingCompleted += new PingCompletedEventHandler(p_PingCompleted);
                 countdown.AddCount();
-                p.SendAsync(ip, 100, ip);
+                p.SendAsync(ipStr, 1000, ipStr);
             }
             countdown.Signal();
             countdown.Wait();
             sw.Stop();
-            TimeSpan span = new TimeSpan(sw.ElapsedTicks);
+            //TimeSpan span = new TimeSpan(sw.ElapsedTicks);
             Console.WriteLine("Took {0} milliseconds. {1} hosts active.", sw.ElapsedMilliseconds, upCount);
-            //Console.ReadLine();
         }
 
         static void p_PingCompleted(object sender, PingCompletedEventArgs e)
@@ -104,9 +100,30 @@ namespace lab1ksisNetScanner
             countdown.Signal();
         }
 
-        static string arp(string ip)
+        public static string arp(string ipAddress)
         {
-            return null;
+            string macAddress = string.Empty;
+            Process pProcess = new Process();
+            pProcess.StartInfo.FileName = "arp";
+            pProcess.StartInfo.Arguments = "-a " + ipAddress;
+            pProcess.StartInfo.UseShellExecute = false;
+            pProcess.StartInfo.RedirectStandardOutput = true;
+            pProcess.StartInfo.CreateNoWindow = true;
+            pProcess.Start();
+            string strOutput = pProcess.StandardOutput.ReadToEnd();
+            string[] substrings = strOutput.Split('-');
+            if (substrings.Length >= 8)
+            {
+                macAddress = substrings[3].Substring(substrings[3].Length - 2)
+                         + "-" + substrings[4] + "-" + substrings[5] + "-" + substrings[6]
+                         + "-" + substrings[7] + "-"
+                         + substrings[8].Substring(0, 2);
+                return macAddress;
+            }
+            else
+            {
+                return "";
+            }
         }
     }
 }
